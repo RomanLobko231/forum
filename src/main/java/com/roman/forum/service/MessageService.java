@@ -36,8 +36,12 @@ public class MessageService {
         if (!topicRepository.existsById(topicId)) throw new ContentDoesNotExistException(topicId, "topic");
 
         return topicRepository.findById(topicId).map(topic -> {
+            topic.getMessages().add(message);
             message.setTopic(topic);
+
+            topicRepository.save(topic);
             return messageRepository.save(message);
+
         }).orElseThrow(() -> new ContentDoesNotExistException(topicId, "topic"));
     }
 }

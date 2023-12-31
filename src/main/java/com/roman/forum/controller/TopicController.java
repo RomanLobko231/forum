@@ -1,6 +1,7 @@
 package com.roman.forum.controller;
 
 import com.roman.forum.errors.ContentDoesNotExistException;
+import com.roman.forum.model.DTO.TopicDisplayDTO;
 import com.roman.forum.model.Topic;
 import com.roman.forum.service.TopicService;
 import org.springframework.http.ResponseEntity;
@@ -21,7 +22,7 @@ public class TopicController {
     }
 
     @GetMapping
-    public List<Topic> getAllTopics(){
+    public List<TopicDisplayDTO> getAllTopics(){
         return topicService.getAllTopics();
     }
 

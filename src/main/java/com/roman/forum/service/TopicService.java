@@ -1,24 +1,33 @@
 package com.roman.forum.service;
 
 import com.roman.forum.errors.ContentDoesNotExistException;
+import com.roman.forum.mapper.TopicMapper;
+import com.roman.forum.model.DTO.TopicDisplayDTO;
 import com.roman.forum.model.Topic;
 import com.roman.forum.repository.TopicRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class TopicService {
 
     private final TopicRepository topicRepository;
+    private final TopicMapper mapper;
 
-    public TopicService(TopicRepository topicRepository) {
+    public TopicService(TopicRepository topicRepository, TopicMapper mapper) {
         this.topicRepository = topicRepository;
+        this.mapper = mapper;
     }
 
-    public List<Topic> getAllTopics(){
-        return topicRepository.findAll();
+    public List<TopicDisplayDTO> getAllTopics(){
+        return topicRepository
+                .findAll()
+                .stream()
+                .map(mapper::toDto)
+                .collect(Collectors.toList());
     }
 
     public Topic saveTopic(Topic topic){

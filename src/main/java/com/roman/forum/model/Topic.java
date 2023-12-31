@@ -29,6 +29,45 @@ public class Topic extends Auditable{
     @Size(max = 500, message = "Title should not exceed 500 characters")
     private String description;
 
+    @Column(name = "likes")
+    @JsonProperty(value = "likes")
+    private Integer likes = 0;
+
+    public Integer getLikes() {
+        return likes;
+    }
+
+    public void setLikes(Integer likes) {
+        this.likes = likes;
+    }
+
+    public Integer getDislikes() {
+        return dislikes;
+    }
+
+    public void setDislikes(Integer dislikes) {
+        this.dislikes = dislikes;
+    }
+
+    @Column(name = "dislikes")
+    @JsonProperty(value = "dislikes")
+    private Integer dislikes = 0;
+
+    @Lob
+    @Column(name = "image")
+    @JsonProperty(value = "image")
+    private byte[] image;
+
+    @OneToMany(mappedBy = "topic", cascade = CascadeType.ALL)
+    private List<Message> messages;
+
+    public List<Message> getMessages() {
+        return messages;
+    }
+
+    public void setMessages(List<Message> messages) {
+        this.messages = messages;
+    }
 
     public Topic() {
     }
@@ -37,6 +76,14 @@ public class Topic extends Auditable{
         this.id = id;
         this.title = title;
         this.description = description;
+    }
+
+    public byte[] getImage() {
+        return image;
+    }
+
+    public void setImage(byte[] image) {
+        this.image = image;
     }
 
     public Long getId() {
