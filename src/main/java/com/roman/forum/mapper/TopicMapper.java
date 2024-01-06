@@ -16,6 +16,8 @@ public class TopicMapper {
                 topic.getMessages().size(),
                 topic.getId(),
                 topic.getLikes(),
-                topic.getDislikes());
+                topic.getDislikes(),
+                topic.getTimeCreated(),
+                topic.getTimeUpdated());
     }
 }

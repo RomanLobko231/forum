@@ -6,13 +6,17 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.SourceType;
+import org.hibernate.annotations.UpdateTimestamp;
 
+import java.time.Instant;
 import java.util.Collections;
 import java.util.List;
 
 @Entity
 @Table(name = "topic")
-public class Topic extends Auditable{
+public class Topic {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -31,7 +35,62 @@ public class Topic extends Auditable{
 
     @Column(name = "likes")
     @JsonProperty(value = "likes")
-    private Integer likes = 0;
+    private Integer likes;
+
+    @Column(name = "dislikes")
+    @JsonProperty(value = "dislikes")
+    private Integer dislikes;
+
+    @Lob
+    @Column(name = "image")
+    @JsonProperty(value = "image")
+    private byte[] image;
+
+    @OneToMany(mappedBy = "topic", cascade = CascadeType.ALL)
+    private List<Message> messages;
+
+    @CreationTimestamp(source = SourceType.DB)
+    private Instant timeCreated;
+
+    @UpdateTimestamp(source = SourceType.DB)
+    private Instant timeUpdated;
+
+    public List<Message> getMessages() {
+        return messages;
+    }
+
+    public Instant getTimeCreated() {
+        return timeCreated;
+    }
+
+    public void setTimeCreated(Instant timeCreated) {
+        this.timeCreated = timeCreated;
+    }
+
+    public Instant getTimeUpdated() {
+        return timeUpdated;
+    }
+
+    public void setTimeUpdated(Instant timeUpdated) {
+        this.timeUpdated = timeUpdated;
+    }
+
+    public void setMessages(List<Message> messages) {
+        this.messages = messages;
+    }
+
+    public Topic() {
+    }
+
+    public Topic(Long id, String title, String description, Integer likes, Integer dislikes, byte[] image, List<Message> messages) {
+        this.id = id;
+        this.title = title;
+        this.description = description;
+        this.likes = likes;
+        this.dislikes = dislikes;
+        this.image = image;
+        this.messages = messages;
+    }
 
     public Integer getLikes() {
         return likes;
@@ -47,35 +106,6 @@ public class Topic extends Auditable{
 
     public void setDislikes(Integer dislikes) {
         this.dislikes = dislikes;
-    }
-
-    @Column(name = "dislikes")
-    @JsonProperty(value = "dislikes")
-    private Integer dislikes = 0;
-
-    @Lob
-    @Column(name = "image")
-    @JsonProperty(value = "image")
-    private byte[] image;
-
-    @OneToMany(mappedBy = "topic", cascade = CascadeType.ALL)
-    private List<Message> messages;
-
-    public List<Message> getMessages() {
-        return messages;
-    }
-
-    public void setMessages(List<Message> messages) {
-        this.messages = messages;
-    }
-
-    public Topic() {
-    }
-
-    public Topic(Long id, String title, String description) {
-        this.id = id;
-        this.title = title;
-        this.description = description;
     }
 
     public byte[] getImage() {

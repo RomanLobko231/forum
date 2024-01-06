@@ -31,6 +31,8 @@ public class TopicService {
     }
 
     public Topic saveTopic(Topic topic){
+        topic.setLikes(0);
+        topic.setDislikes(0);
         return topicRepository.save(topic);
     }
 

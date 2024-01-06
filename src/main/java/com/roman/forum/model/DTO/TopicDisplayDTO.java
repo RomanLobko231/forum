@@ -1,5 +1,7 @@
 package com.roman.forum.model.DTO;
 
+import java.time.Instant;
+
 public class TopicDisplayDTO {
 
     private String title;
@@ -14,9 +16,33 @@ public class TopicDisplayDTO {
 
     private Integer likes;
 
+    private Instant timeCreated;
+
+    private Instant timeUpdated;
+
+    private Integer dislikes;
+
+
     public Integer getLikes() {
         return likes;
     }
+
+    public Instant getTimeCreated() {
+        return timeCreated;
+    }
+
+    public void setTimeCreated(Instant timeCreated) {
+        this.timeCreated = timeCreated;
+    }
+
+    public Instant getTimeUpdated() {
+        return timeUpdated;
+    }
+
+    public void setTimeUpdated(Instant timeUpdated) {
+        this.timeUpdated = timeUpdated;
+    }
+
 
     public void setLikes(Integer likes) {
         this.likes = likes;
@@ -30,8 +56,6 @@ public class TopicDisplayDTO {
         this.dislikes = dislikes;
     }
 
-    private Integer dislikes;
-
     public Long getId() {
         return id;
     }
@@ -40,13 +64,15 @@ public class TopicDisplayDTO {
         this.id = id;
     }
 
-    public TopicDisplayDTO(String title, String description, byte[] image, int numberOfMessages, Long id, Integer likes, Integer dislikes) {
+    public TopicDisplayDTO(String title, String description, byte[] image, int numberOfMessages, Long id, Integer likes, Integer dislikes, Instant timeCreated,Instant timeUpdated) {
         this.title = title;
         this.description = description;
         this.image = image;
         this.numberOfMessages = numberOfMessages;
         this.likes = likes;
         this.dislikes = dislikes;
+        this.timeCreated = timeCreated;
+        this.timeUpdated = timeUpdated;
         this.id = id;
     }
 
