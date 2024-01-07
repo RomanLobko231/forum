@@ -4,6 +4,8 @@ import com.roman.forum.model.DTO.TopicDisplayDTO;
 import com.roman.forum.model.Topic;
 import org.springframework.stereotype.Component;
 
+import java.io.IOException;
+
 @Component
 public class TopicMapper {
 

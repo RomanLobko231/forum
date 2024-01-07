@@ -4,9 +4,12 @@ import com.roman.forum.errors.ContentDoesNotExistException;
 import com.roman.forum.model.DTO.TopicDisplayDTO;
 import com.roman.forum.model.Topic;
 import com.roman.forum.service.TopicService;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.net.URI;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -32,10 +35,11 @@ public class TopicController {
         return ResponseEntity.ok().body(fetchedTopic);
     }
 
-    @PostMapping
-    public ResponseEntity<Topic> saveTopic(@RequestBody Topic topic){
+    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<Topic> saveTopic(@RequestPart(name = "image") MultipartFile image, @RequestPart(name = "topic") Topic topic) throws IOException {
+        topic.setImage(image.getBytes());
         Topic createdTopic = topicService.saveTopic(topic);
-        return ResponseEntity.created(URI.create("my-url.com/" + createdTopic.getId())).body(createdTopic);
+        return ResponseEntity.created(URI.create("my-url.com/topics/" + createdTopic.getId())).body(createdTopic);
     }
 
     @PutMapping

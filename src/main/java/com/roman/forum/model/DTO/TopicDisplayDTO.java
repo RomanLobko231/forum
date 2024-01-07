@@ -1,5 +1,6 @@
 package com.roman.forum.model.DTO;
 
+import java.io.IOException;
 import java.time.Instant;
 
 public class TopicDisplayDTO {
@@ -64,7 +65,7 @@ public class TopicDisplayDTO {
         this.id = id;
     }
 
-    public TopicDisplayDTO(String title, String description, byte[] image, int numberOfMessages, Long id, Integer likes, Integer dislikes, Instant timeCreated,Instant timeUpdated) {
+    public TopicDisplayDTO(String title, String description, byte[] image, int numberOfMessages, Long id, Integer likes, Integer dislikes, Instant timeCreated, Instant timeUpdated) {
         this.title = title;
         this.description = description;
         this.image = image;
