@@ -13,14 +13,15 @@ import org.hibernate.annotations.UpdateTimestamp;
 import java.time.Instant;
 import java.util.Collections;
 import java.util.List;
+import java.util.UUID;
 
 @Entity
 @Table(name = "topic")
 public class Topic {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private UUID id;
 
     @Column(name = "title")
     @JsonProperty(value = "title")
@@ -42,9 +43,10 @@ public class Topic {
     private Integer dislikes;
 
     @Lob
-    @Column(name = "image")
-    @JsonProperty(value = "image")
-    private byte[] image;
+    @Column(name = "images")
+    @JsonProperty(value = "images")
+    @OneToMany(cascade = CascadeType.ALL)
+    private List<Image> images;
 
     @OneToMany(mappedBy = "topic", cascade = CascadeType.ALL)
     private List<Message> messages;
@@ -82,13 +84,13 @@ public class Topic {
     public Topic() {
     }
 
-    public Topic(Long id, String title, String description, Integer likes, Integer dislikes, byte[] image, List<Message> messages) {
+    public Topic(UUID id, String title, String description, Integer likes, Integer dislikes, List<Image> images, List<Message> messages) {
         this.id = id;
         this.title = title;
         this.description = description;
         this.likes = likes;
         this.dislikes = dislikes;
-        this.image = image;
+        this.images = images;
         this.messages = messages;
     }
 
@@ -108,19 +110,19 @@ public class Topic {
         this.dislikes = dislikes;
     }
 
-    public byte[] getImage() {
-        return image;
+    public List<Image> getImages() {
+        return images;
     }
 
-    public void setImage(byte[] image) {
-        this.image = image;
+    public void setImages(List<Image> images) {
+        this.images = images;
     }
 
-    public Long getId() {
+    public UUID getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(UUID id) {
         this.id = id;
     }
 

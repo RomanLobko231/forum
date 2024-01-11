@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
@@ -42,12 +43,12 @@ public class TopicService {
         return topicRepository.save(topic);
     }
 
-    public void deleteTopicById(Long id) throws ContentDoesNotExistException{
+    public void deleteTopicById(UUID id) throws ContentDoesNotExistException{
         if (!topicRepository.existsById(id)) throw new ContentDoesNotExistException(id, "topic");
         topicRepository.deleteById(id);
     }
 
-    public Optional<Topic> getTopicById(Long id){
+    public Optional<Topic> getTopicById(UUID id){
         return topicRepository.findById(id);
     }
 }

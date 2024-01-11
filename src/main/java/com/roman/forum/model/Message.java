@@ -10,19 +10,20 @@ import jakarta.validation.constraints.Size;
 import org.hibernate.annotations.*;
 
 import java.time.Instant;
+import java.util.UUID;
 
 @Entity
 @Table(name = "message")
 public class Message {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private UUID id;
 
     @Column(name = "message")
     @JsonProperty(value = "message")
     @NotBlank(message = "Message should not be empty")
-    @Size(max = 500, message = "Message should not exceed 500 characters")
+    @Size(max = 2000, message = "Message should not exceed 2000 characters")
     private String message;
 
     @CreationTimestamp(source = SourceType.DB)
@@ -39,7 +40,7 @@ public class Message {
     protected Message() {
     }
 
-    public Message(Long id, String message, Topic topic) {
+    public Message(UUID id, String message, Topic topic) {
         this.id = id;
         this.message = message;
         this.topic = topic;
@@ -61,11 +62,11 @@ public class Message {
         this.timeUpdated = timeUpdated;
     }
 
-    public Long getId() {
+    public UUID getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(UUID id) {
         this.id = id;
     }
 

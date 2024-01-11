@@ -7,6 +7,7 @@ import com.roman.forum.repository.TopicRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.UUID;
 
 @Service
 public class MessageService {
@@ -21,18 +22,18 @@ public class MessageService {
         this.topicRepository = topicRepository;
     }
 
-    public List<Message> getAllMessagesByTopicId(Long topicId) throws ContentDoesNotExistException{
+    public List<Message> getAllMessagesByTopicId(UUID topicId) throws ContentDoesNotExistException{
         if (!topicRepository.existsById(topicId)) throw new ContentDoesNotExistException(topicId, "topic");
 
         return messageRepository.findByTopicId(topicId);
     }
 
-    public void deleteMessageById(Long messageId) throws ContentDoesNotExistException{
+    public void deleteMessageById(UUID messageId) throws ContentDoesNotExistException{
         if (!messageRepository.existsById(messageId)) throw new ContentDoesNotExistException(messageId, "message");
         messageRepository.deleteById(messageId);
     }
 
-    public Message saveMessageWithTopicId(Long topicId, Message message){
+    public Message saveMessageWithTopicId(UUID topicId, Message message){
         if (!topicRepository.existsById(topicId)) throw new ContentDoesNotExistException(topicId, "topic");
 
         return topicRepository.findById(topicId).map(topic -> {

@@ -2,6 +2,7 @@ package com.roman.forum.model.DTO;
 
 import java.io.IOException;
 import java.time.Instant;
+import java.util.UUID;
 
 public class TopicDisplayDTO {
 
@@ -13,7 +14,7 @@ public class TopicDisplayDTO {
 
     private int numberOfMessages;
 
-    private Long id;
+    private UUID id;
 
     private Integer likes;
 
@@ -57,15 +58,15 @@ public class TopicDisplayDTO {
         this.dislikes = dislikes;
     }
 
-    public Long getId() {
+    public UUID getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(UUID id) {
         this.id = id;
     }
 
-    public TopicDisplayDTO(String title, String description, byte[] image, int numberOfMessages, Long id, Integer likes, Integer dislikes, Instant timeCreated, Instant timeUpdated) {
+    public TopicDisplayDTO(String title, String description, byte[] image, int numberOfMessages, UUID id, Integer likes, Integer dislikes, Instant timeCreated, Instant timeUpdated) {
         this.title = title;
         this.description = description;
         this.image = image;

@@ -1,11 +1,9 @@
 package com.roman.forum.repository;
 
-import com.roman.forum.model.Topic;
+import com.roman.forum.model.Image;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import java.util.UUID;
-
 @Repository
-public interface TopicRepository extends JpaRepository<Topic, UUID> {
+public interface ImageRepository extends JpaRepository<Image, Long> {
 }
