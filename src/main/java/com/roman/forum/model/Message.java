@@ -20,10 +20,9 @@ public class Message {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
-    @Column(name = "message")
+    @Column(name = "message", columnDefinition = "TEXT")
     @JsonProperty(value = "message")
     @NotBlank(message = "Message should not be empty")
-    @Size(max = 2000, message = "Message should not exceed 2000 characters")
     private String message;
 
     @CreationTimestamp(source = SourceType.DB)
