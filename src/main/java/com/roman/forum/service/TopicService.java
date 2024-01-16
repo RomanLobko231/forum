@@ -39,8 +39,20 @@ public class TopicService {
 
     public Topic updateTopic(Topic topic) throws ContentDoesNotExistException{
         if (!topicRepository.existsById(topic.getId())) throw new ContentDoesNotExistException(topic.getId(), "topic");
-
+//        topicRepository
+//                .findById(topic.getId())
+//                .ifPresentOrElse(
+//                        topicRepository::save,
+//                        () -> {throw new ContentDoesNotExistException(topic.getId(), "topic");}
+//                );
         return topicRepository.save(topic);
+    }
+
+
+    public void updateLikesDislikes(Integer likes, Integer dislikes, UUID topicId){
+        if (!topicRepository.existsById(topicId)) throw new ContentDoesNotExistException(topicId, "topic");
+
+        topicRepository.updateLikesDislikes(likes, dislikes, topicId);
     }
 
     public void deleteTopicById(UUID id) throws ContentDoesNotExistException{

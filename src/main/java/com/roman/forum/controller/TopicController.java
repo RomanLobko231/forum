@@ -1,6 +1,7 @@
 package com.roman.forum.controller;
 
 import com.roman.forum.errors.ContentDoesNotExistException;
+import com.roman.forum.model.DTO.LikeDislikeDTO;
 import com.roman.forum.model.DTO.TopicDisplayDTO;
 import com.roman.forum.model.Image;
 import com.roman.forum.model.Topic;
@@ -67,6 +68,16 @@ public class TopicController {
             return ResponseEntity.accepted().body(newTopic);
         }
         catch (ContentDoesNotExistException e){
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @PutMapping(path = "/likes-dislikes")
+    public ResponseEntity<Topic> updateLikesDislikes(@RequestBody LikeDislikeDTO likesDislikesDto){
+        try {
+            topicService.updateLikesDislikes(likesDislikesDto.getLikes(), likesDislikesDto.getDislikes(), likesDislikesDto.getId());
+            return ResponseEntity.accepted().build();
+        } catch (ContentDoesNotExistException e){
             return ResponseEntity.notFound().build();
         }
     }
