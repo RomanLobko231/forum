@@ -31,7 +31,6 @@ public class Topic {
 
     @Column(name = "message", columnDefinition = "TEXT")
     @JsonProperty(value = "description")
-    @Size(max = 500, message = "Title should not exceed 500 characters")
     private String description;
 
     @Column(name = "likes")
