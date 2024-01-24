@@ -7,6 +7,9 @@ import com.roman.forum.model.Image;
 import com.roman.forum.model.Topic;
 import com.roman.forum.service.ImageService;
 import com.roman.forum.service.TopicService;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -21,6 +24,8 @@ import java.util.UUID;
 @RestController
 @RequestMapping("/topics")
 public class TopicController {
+
+    private static final Logger logger = LogManager.getLogger(TopicController.class);
 
     private final TopicService topicService;
     private final ImageService imageService;
@@ -72,13 +77,13 @@ public class TopicController {
         }
     }
 
-    @PutMapping(path = "/likes-dislikes")
-    public ResponseEntity<Topic> updateLikesDislikes(@RequestBody LikeDislikeDTO likesDislikesDto){
+    @PatchMapping
+    public ResponseEntity<?> updateLikesDislikes(@RequestBody LikeDislikeDTO likesDislikesDto){
         try {
             topicService.updateLikesDislikes(likesDislikesDto.getLikes(), likesDislikesDto.getDislikes(), likesDislikesDto.getId());
             return ResponseEntity.accepted().build();
         } catch (ContentDoesNotExistException e){
-            return ResponseEntity.notFound().build();
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e);
         }
     }
 
