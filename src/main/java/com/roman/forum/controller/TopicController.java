@@ -68,33 +68,19 @@ public class TopicController {
 
     @PutMapping
     public ResponseEntity<Topic> updateTopic(@RequestBody Topic topic){
-        try{
-            Topic newTopic = topicService.updateTopic(topic);
-            return ResponseEntity.accepted().body(newTopic);
-        }
-        catch (ContentDoesNotExistException e){
-            return ResponseEntity.notFound().build();
-        }
+        Topic newTopic = topicService.updateTopic(topic);
+        return ResponseEntity.accepted().body(newTopic);
     }
 
     @PatchMapping
-    public ResponseEntity<?> updateLikesDislikes(@RequestBody LikeDislikeDTO likesDislikesDto){
-        try {
-            topicService.updateLikesDislikes(likesDislikesDto.getLikes(), likesDislikesDto.getDislikes(), likesDislikesDto.getId());
-            return ResponseEntity.accepted().build();
-        } catch (ContentDoesNotExistException e){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e);
-        }
+    public ResponseEntity<Topic> updateLikesDislikes(@RequestBody LikeDislikeDTO likesDislikesDto){
+        topicService.updateLikesDislikes(likesDislikesDto.getLikes(), likesDislikesDto.getDislikes(), likesDislikesDto.getId());
+        return ResponseEntity.accepted().build();
     }
 
     @DeleteMapping(path = "/{id}")
     public ResponseEntity<Topic> deleteTopicById(@PathVariable(name = "id") UUID topicId){
-        try{
-            topicService.deleteTopicById(topicId);
-            return ResponseEntity.noContent().build();
-        }
-        catch (ContentDoesNotExistException e){
-            return ResponseEntity.notFound().build();
-        }
+        topicService.deleteTopicById(topicId);
+        return ResponseEntity.noContent().build();
     }
 }

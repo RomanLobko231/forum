@@ -22,12 +22,8 @@ public class MessageController {
 
     @GetMapping(path = "/{topicId}/messages")
     public ResponseEntity<List<Message>> getAllMessagesByTopicId(@PathVariable(value = "topicId") UUID id){
-        try{
-            List<Message> messages = messageService.getAllMessagesByTopicId(id);
-            return ResponseEntity.ok(messages);
-        } catch (ContentDoesNotExistException e){
-            return ResponseEntity.notFound().build();
-        }
+        List<Message> messages = messageService.getAllMessagesByTopicId(id);
+        return ResponseEntity.ok(messages);
     }
 
 
@@ -41,12 +37,8 @@ public class MessageController {
 
     @PostMapping(path = "/{topicId}/messages")
     public ResponseEntity<Message> saveMessageWithTopicId(@PathVariable(value = "topicId") UUID id, @RequestBody Message message){
-        try {
-            Message newMessage = messageService.saveMessageWithTopicId(id, message);
-            return ResponseEntity.created(URI.create("my-url.com/topics/%s/messages/%s".formatted(id, newMessage.getId()))).body(newMessage);
-        }catch (ContentDoesNotExistException e){
-            return ResponseEntity.notFound().build();
-        }
+        Message newMessage = messageService.saveMessageWithTopicId(id, message);
+        return ResponseEntity.created(URI.create("my-url.com/topics/%s/messages/%s".formatted(id, newMessage.getId()))).body(newMessage);
     }
 
 }
