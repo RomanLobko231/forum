@@ -14,7 +14,7 @@ spring:
 #        persistence:
 #          schema-generation:
 #            scripts:
-#              create-target: /create.sql
+#              create-target: ./create.sql
 #              action: create
 #              create-source: metadata
   servlet:
@@ -23,4 +23,7 @@ spring:
       max-file-size: 10MB
   flyway:
     enabled: true
-    locations: classpath:db/migration
+    locations: classpath:db/migrations
+
+cors:
+  origins: http://localhost:3000

@@ -39,7 +39,7 @@ public class ControllerExceptionHandler {
         return new ErrorMessage(
                 HttpStatus.BAD_REQUEST.value(),
                 new Date(),
-                ex.getMessage(),
+                ex.getMessage() + "\nPlease check that argument value corresponds with required type",
                 request.getDescription(false));
     }
 
