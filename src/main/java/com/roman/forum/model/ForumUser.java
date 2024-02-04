@@ -1,5 +1,6 @@
 package com.roman.forum.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
@@ -27,6 +28,7 @@ public class ForumUser implements UserDetails {
     private String username;
 
     @Column(name = "password")
+    @JsonIgnore
     @JsonProperty(value = "password")
     @NotBlank(message = "Password should not be empty")
     @Size(max = 20, message = "Password should not exceed 20 characters")

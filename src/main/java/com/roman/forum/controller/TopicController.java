@@ -1,6 +1,8 @@
 package com.roman.forum.controller;
 
 import com.roman.forum.errors.ContentDoesNotExistException;
+import com.roman.forum.errors.ImageProcessingException;
+import com.roman.forum.errors.NullImageException;
 import com.roman.forum.model.DTO.LikeDislikeDTO;
 import com.roman.forum.model.DTO.TopicDisplayDTO;
 import com.roman.forum.model.Image;
@@ -47,18 +49,20 @@ public class TopicController {
     }
 
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<Topic> saveTopic(@RequestPart(name = "images", required = false) List<MultipartFile> files, @RequestPart(name = "topic") Topic topic){
+    public ResponseEntity<?> saveTopic(@RequestPart(name = "images", required = false) List<MultipartFile> files, @RequestPart(name = "topic") Topic topic){
 
         if (files != null){
             List<Image> images = new ArrayList<>();
             for (MultipartFile file: files){
-                try {
-                    images.add(new Image(file.getBytes(), file.getOriginalFilename(), file.getSize()));
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+                    try {
+                        images.add(new Image(file.getBytes(), file.getOriginalFilename(), file.getSize()));
+                    } catch (IOException e) {
+                        throw new ImageProcessingException(e, file.getOriginalFilename());
+                    } catch (NullPointerException e) {
+                        throw new NullImageException(e.getMessage());
+                    }
             }
-            images.forEach(image -> System.out.println(image.getImageName()));
+
             imageService.saveImages(images);
             topic.setImages(images);
         }
