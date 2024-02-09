@@ -4,6 +4,7 @@ import com.roman.forum.model.ErrorMessage;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
@@ -67,9 +68,21 @@ public class ControllerExceptionHandler {
     @ExceptionHandler(UserAlreadyExistsException.class)
     @ResponseStatus(HttpStatus.CONFLICT)
     public ErrorMessage userExistsHandler(UserAlreadyExistsException ex, WebRequest request){
-        logger.info("Such user already exists", ex);
+        logger.info("Such user already exists.", ex);
         return new ErrorMessage(
                 HttpStatus.CONFLICT.value(),
+                new Date(),
+                ex.getMessage(),
+                request.getDescription(false)
+        );
+    }
+
+    @ExceptionHandler(UsernameNotFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public ErrorMessage usernameNotFountHandler(UsernameNotFoundException ex, WebRequest request){
+        logger.info("Username was not found.", ex);
+        return new ErrorMessage(
+                HttpStatus.NOT_FOUND.value(),
                 new Date(),
                 ex.getMessage(),
                 request.getDescription(false)

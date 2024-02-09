@@ -1,11 +1,18 @@
 package com.roman.forum.model.DTO;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+import jakarta.validation.constraints.Size;
+
 public class UserAuthDTO {
 
+    @JsonProperty(value = "password")
+    @Size(min = 6, max = 40, message = "Password should be between 6 and 20 characters")
     private String password;
 
+    @JsonProperty(value = "username")
     private String username;
 
+    @JsonProperty(value = "email")
     private String email;
 
     public UserAuthDTO(String password, String username, String email) {

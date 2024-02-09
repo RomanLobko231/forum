@@ -8,6 +8,6 @@ import java.util.UUID;
 public class ContentDoesNotExistException extends RuntimeException{
 
     public ContentDoesNotExistException(Object id, String contentType) {
-        super("A %s with identification '%s' does not exist".formatted(contentType, id));
+        super("A %s with id '%s' does not exist".formatted(contentType, id));
     }
 }

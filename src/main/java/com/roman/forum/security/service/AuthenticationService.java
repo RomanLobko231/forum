@@ -9,9 +9,11 @@ import com.roman.forum.model.Role;
 import com.roman.forum.repository.RolesRepository;
 import com.roman.forum.repository.UserRepository;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.InternalAuthenticationServiceException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -60,11 +62,11 @@ public class AuthenticationService {
             Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
 
             String token = tokenService.generateToken(authentication);
-            ForumUser user = userRepository.findByUsername(username).orElseThrow(() -> new ContentDoesNotExistException("username", "user"));
+            ForumUser user = userRepository.findByUsername(username).orElseThrow(() -> new UsernameNotFoundException("User with username '%s' was not found".formatted(username)));
 
             return new LoginResponseDTO(user, token);
         } catch (AuthenticationException e) {
-            throw new RuntimeException(e);
+            throw new InternalAuthenticationServiceException(e.getMessage());
         }
     }
 

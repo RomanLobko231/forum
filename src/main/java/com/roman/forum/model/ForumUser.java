@@ -24,20 +24,18 @@ public class ForumUser implements UserDetails {
     @Column(name = "username", unique = true)
     @JsonProperty(value = "username")
     @NotBlank(message = "Username should not be empty")
-    @Size(max = 20, message = "Username should not exceed 20 characters")
+    @Size(min = 3, max = 20, message = "Username should be between 3 and 20 characters")
     private String username;
 
     @Column(name = "password")
     @JsonIgnore
     @JsonProperty(value = "password")
     @NotBlank(message = "Password should not be empty")
-    @Size(max = 20, message = "Password should not exceed 20 characters")
     private String password;
 
     @Column(name = "email", unique = true)
     @JsonProperty(value = "email")
     @NotBlank(message = "Email should not be empty")
-    @Size(max = 20, message = "Email should not exceed 20 characters")
     private String email;
 
     @ManyToMany(fetch = FetchType.EAGER)
