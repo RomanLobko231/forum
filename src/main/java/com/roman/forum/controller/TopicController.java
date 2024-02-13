@@ -1,12 +1,17 @@
 package com.roman.forum.controller;
 
 import com.roman.forum.errors.ContentDoesNotExistException;
+import com.roman.forum.errors.ImageProcessingException;
+import com.roman.forum.errors.NullImageException;
 import com.roman.forum.model.DTO.LikeDislikeDTO;
 import com.roman.forum.model.DTO.TopicDisplayDTO;
 import com.roman.forum.model.Image;
 import com.roman.forum.model.Topic;
 import com.roman.forum.service.ImageService;
 import com.roman.forum.service.TopicService;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -21,6 +26,8 @@ import java.util.UUID;
 @RestController
 @RequestMapping("/topics")
 public class TopicController {
+
+    private static final Logger logger = LogManager.getLogger(TopicController.class);
 
     private final TopicService topicService;
     private final ImageService imageService;
@@ -42,18 +49,20 @@ public class TopicController {
     }
 
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<Topic> saveTopic(@RequestPart(name = "images", required = false) List<MultipartFile> files, @RequestPart(name = "topic") Topic topic){
+    public ResponseEntity<?> saveTopic(@RequestPart(name = "images", required = false) List<MultipartFile> files, @RequestPart(name = "topic") Topic topic){
 
         if (files != null){
             List<Image> images = new ArrayList<>();
             for (MultipartFile file: files){
-                try {
-                    images.add(new Image(file.getBytes(), file.getOriginalFilename(), file.getSize()));
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+                    try {
+                        images.add(new Image(file.getBytes(), file.getOriginalFilename(), file.getSize()));
+                    } catch (IOException e) {
+                        throw new ImageProcessingException(e, file.getOriginalFilename());
+                    } catch (NullPointerException e) {
+                        throw new NullImageException(e.getMessage());
+                    }
             }
-            images.forEach(image -> System.out.println(image.getImageName()));
+
             imageService.saveImages(images);
             topic.setImages(images);
         }
@@ -63,33 +72,19 @@ public class TopicController {
 
     @PutMapping
     public ResponseEntity<Topic> updateTopic(@RequestBody Topic topic){
-        try{
-            Topic newTopic = topicService.updateTopic(topic);
-            return ResponseEntity.accepted().body(newTopic);
-        }
-        catch (ContentDoesNotExistException e){
-            return ResponseEntity.notFound().build();
-        }
+        Topic newTopic = topicService.updateTopic(topic);
+        return ResponseEntity.accepted().body(newTopic);
     }
 
-    @PutMapping(path = "/likes-dislikes")
+    @PatchMapping
     public ResponseEntity<Topic> updateLikesDislikes(@RequestBody LikeDislikeDTO likesDislikesDto){
-        try {
-            topicService.updateLikesDislikes(likesDislikesDto.getLikes(), likesDislikesDto.getDislikes(), likesDislikesDto.getId());
-            return ResponseEntity.accepted().build();
-        } catch (ContentDoesNotExistException e){
-            return ResponseEntity.notFound().build();
-        }
+        topicService.updateLikesDislikes(likesDislikesDto.getLikes(), likesDislikesDto.getDislikes(), likesDislikesDto.getId());
+        return ResponseEntity.accepted().build();
     }
 
     @DeleteMapping(path = "/{id}")
     public ResponseEntity<Topic> deleteTopicById(@PathVariable(name = "id") UUID topicId){
-        try{
-            topicService.deleteTopicById(topicId);
-            return ResponseEntity.noContent().build();
-        }
-        catch (ContentDoesNotExistException e){
-            return ResponseEntity.notFound().build();
-        }
+        topicService.deleteTopicById(topicId);
+        return ResponseEntity.noContent().build();
     }
 }
