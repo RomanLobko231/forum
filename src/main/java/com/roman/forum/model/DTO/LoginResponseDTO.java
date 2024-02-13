@@ -6,11 +6,11 @@ public class LoginResponseDTO {
 
     private ForumUser user;
 
-    private String jwt;
+    private String token;
 
-    public LoginResponseDTO(ForumUser user, String jwt) {
+    public LoginResponseDTO(ForumUser user, String token) {
         this.user = user;
-        this.jwt = jwt;
+        this.token = token;
     }
 
     public ForumUser getUser() {
@@ -21,11 +21,11 @@ public class LoginResponseDTO {
         this.user = user;
     }
 
-    public String getJwt() {
-        return jwt;
+    public String getToken() {
+        return token;
     }
 
-    public void setJwt(String jwt) {
-        this.jwt = jwt;
+    public void setToken(String token) {
+        this.token = token;
     }
 }

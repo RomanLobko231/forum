@@ -6,7 +6,7 @@ import jakarta.validation.constraints.Size;
 public class UserAuthDTO {
 
     @JsonProperty(value = "password")
-    @Size(min = 6, max = 40, message = "Password should be between 6 and 20 characters")
+    @Size(min = 8, max = 40, message = "Password should be between 6 and 20 characters")
     private String password;
 
     @JsonProperty(value = "username")
