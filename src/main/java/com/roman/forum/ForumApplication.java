@@ -26,9 +26,7 @@ public class ForumApplication {
 	@Bean
 	CommandLineRunner run(RolesRepository roleRepository, UserRepository userRepository, PasswordEncoder passwordEncoder){
 		return args -> {
-			if (roleRepository.findByAuthority("ADMIN").isPresent()) return;
-			roleRepository.save(new Role("ADMIN"));
-			roleRepository.save(new Role("USER"));
+			userRepository.deleteAll();
 		};
 	}
 }
