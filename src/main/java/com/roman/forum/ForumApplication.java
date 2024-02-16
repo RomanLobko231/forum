@@ -23,10 +23,10 @@ public class ForumApplication {
 		SpringApplication.run(ForumApplication.class, args);
 	}
 
-	@Bean
-	CommandLineRunner run(RolesRepository roleRepository, UserRepository userRepository, PasswordEncoder passwordEncoder){
-		return args -> {
-			userRepository.deleteAll();
-		};
-	}
+//	@Bean
+//	CommandLineRunner run(RolesRepository roleRepository, UserRepository userRepository, PasswordEncoder passwordEncoder){
+//		return args -> {
+//			userRepository.deleteAll();
+//		};
+//	}
 }
