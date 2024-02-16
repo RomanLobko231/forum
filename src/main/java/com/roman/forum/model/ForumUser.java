@@ -45,6 +45,13 @@ public class ForumUser implements UserDetails {
             inverseJoinColumns = {@JoinColumn(name = "role_id")})
     private Set<Role> authorities;
 
+    @Column(name = "is_enabled")
+    @JsonProperty(value = "is_enabled")
+    private boolean isEnabled;
+
+    @Column(name = "verification_token")
+    @JsonProperty(value = "verification_token")
+    private String verificationToken;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -56,12 +63,13 @@ public class ForumUser implements UserDetails {
         this.authorities = new HashSet<Role>();
     }
 
-    public ForumUser(UUID id, String username, String password, String email, Set<Role> authorities) {
+    public ForumUser(UUID id, String username, String password, String email, Set<Role> authorities, boolean isEnabled) {
         this.id = id;
         this.username = username;
         this.password = password;
         this.email = email;
         this.authorities = authorities;
+        this.isEnabled = isEnabled;
     }
 
     @Override
@@ -91,7 +99,19 @@ public class ForumUser implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return true;
+        return isEnabled;
+    }
+
+    public void setEnabled(boolean enabled) {
+        isEnabled = enabled;
+    }
+
+    public String getVerificationToken() {
+        return verificationToken;
+    }
+
+    public void setVerificationToken(String verificationToken) {
+        this.verificationToken = verificationToken;
     }
 
     public UUID getId() {

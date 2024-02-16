@@ -4,6 +4,8 @@ import com.roman.forum.model.ErrorMessage;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.authentication.DisabledException;
+import org.springframework.security.authentication.InternalAuthenticationServiceException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.request.WebRequest;
@@ -21,7 +23,7 @@ public class ControllerExceptionHandler {
     @ExceptionHandler(ContentDoesNotExistException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public ErrorMessage contentDoesNotExistHandler(ContentDoesNotExistException ex, WebRequest request){
-        logger.warn("Content was not found", ex);
+        logger.info("Content was not found", ex);
         return new ErrorMessage(
                 HttpStatus.NOT_FOUND.value(),
                 new Date(),
@@ -33,7 +35,7 @@ public class ControllerExceptionHandler {
     @ExceptionHandler(MethodArgumentTypeMismatchException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorMessage wrongArgumentTypeHandler(MethodArgumentTypeMismatchException ex, WebRequest request){
-        logger.warn("A wrong argument was provided.", ex);
+        logger.info("A wrong argument was provided.", ex);
         return new ErrorMessage(
                 HttpStatus.BAD_REQUEST.value(),
                 new Date(),
@@ -79,7 +81,7 @@ public class ControllerExceptionHandler {
 
     @ExceptionHandler(UsernameNotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    public ErrorMessage usernameNotFountHandler(UsernameNotFoundException ex, WebRequest request){
+    public ErrorMessage usernameNotFoundHandler(UsernameNotFoundException ex, WebRequest request){
         logger.info("Username was not found.", ex);
         return new ErrorMessage(
                 HttpStatus.NOT_FOUND.value(),
@@ -88,4 +90,31 @@ public class ControllerExceptionHandler {
                 request.getDescription(false)
         );
     }
+
+
+    @ExceptionHandler(DisabledException.class)
+    @ResponseStatus(HttpStatus.FORBIDDEN)
+    public ErrorMessage emailNotVerifiedHandler(DisabledException ex, WebRequest request){
+        logger.info("User is not enabled", ex);
+        return new ErrorMessage(
+                HttpStatus.FORBIDDEN.value(),
+                new Date(),
+                ex.getMessage(),
+                request.getDescription(false)
+        );
+    }
+
+
+    @ExceptionHandler(InternalAuthenticationServiceException.class)
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    public ErrorMessage authFailedHandler(InternalAuthenticationServiceException ex, WebRequest request){
+        logger.info("Could not authenticate a user", ex);
+        return new ErrorMessage(
+                HttpStatus.INTERNAL_SERVER_ERROR.value(),
+                new Date(),
+                "Something went wrong, check your info again",
+                request.getDescription(false)
+        );
+    }
+
 }

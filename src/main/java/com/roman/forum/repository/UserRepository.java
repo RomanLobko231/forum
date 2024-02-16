@@ -9,9 +9,13 @@ import java.util.UUID;
 
 @Repository
 public interface UserRepository extends JpaRepository<ForumUser, UUID> {
+    Optional<ForumUser> findByUsernameOrEmail(String username, String email);
+
     Optional<ForumUser> findByUsername(String username);
 
     Optional<ForumUser> findByEmail(String email);
 
     boolean existsUserByUsernameOrEmail(String username, String email);
+
+    Optional<ForumUser> findByVerificationToken(String token);
 }

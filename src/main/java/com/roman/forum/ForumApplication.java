@@ -23,12 +23,10 @@ public class ForumApplication {
 		SpringApplication.run(ForumApplication.class, args);
 	}
 
-	@Bean
-	CommandLineRunner run(RolesRepository roleRepository, UserRepository userRepository, PasswordEncoder passwordEncoder){
-		return args -> {
-			if (roleRepository.findByAuthority("ADMIN").isPresent()) return;
-			roleRepository.save(new Role("ADMIN"));
-			roleRepository.save(new Role("USER"));
-		};
-	}
+//	@Bean
+//	CommandLineRunner run(RolesRepository roleRepository, UserRepository userRepository, PasswordEncoder passwordEncoder){
+//		return args -> {
+//			userRepository.deleteAll();
+//		};
+//	}
 }

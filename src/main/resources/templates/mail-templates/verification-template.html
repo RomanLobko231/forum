@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</head>
+<body>
+<p th:utext="${'Hello, ' + name + '!'}"></p>
+<p>Thank you for registering your account!</p>
+<p>The only thing left is to verify this email. Please click a link below:</p>
+<a  th:href="@{'http://localhost:3000/verify?token=' + ${token}}">Verify</a>
+<p>
+    Regards, <br />
+    <em>Vatra Team</em>
+</p>
+</body>
+</html>
