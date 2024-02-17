@@ -53,4 +53,7 @@ public class MailService {
     }
 
 
+    public void sendPasswordResetEmail(String email) {
+
+    }
 }

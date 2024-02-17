@@ -17,9 +17,11 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.oauth2.jwt.JwtException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.nio.file.attribute.UserPrincipalNotFoundException;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
@@ -51,8 +53,9 @@ public class AuthenticationService {
     }
 
 
-    public ForumUser registerUser(String username, String password, String email){
-        if (userRepository.existsUserByUsernameOrEmail(username, email)) throw new UserAlreadyExistsException(username, email);
+    public ForumUser registerUser(String username, String password, String email) {
+        if (userRepository.existsUserByUsernameOrEmail(username, email))
+            throw new UserAlreadyExistsException(username, email);
 
         String encodedPassword = passwordEncoder.encode(password);
         Role userRole = rolesRepository.findByAuthority("USER").orElseThrow(() -> new ContentDoesNotExistException("USER", "role"));
@@ -66,12 +69,12 @@ public class AuthenticationService {
         return user;
     }
 
-    public LoginResponseDTO loginUser(String username, String email, String password){
+    public LoginResponseDTO loginUser(String username, String email, String password) {
 
         String principal = username.isBlank() ? email : username;
         ForumUser user = userRepository
                 .findByUsernameOrEmail(username, email)
-                .orElseThrow(() -> new UsernameNotFoundException("User with principal '%s' was not found".formatted(principal)));
+                .orElseThrow(() -> new UsernameNotFoundException("User with username or email '%s' was not found".formatted(principal)));
 
         if (!user.isEnabled()) throw new DisabledException("Account is not enabled, please verify provided email");
 
@@ -86,7 +89,7 @@ public class AuthenticationService {
         }
     }
 
-    public ForumUser verifyEmail(String token){
+    public ForumUser verifyEmail(String token) {
         ForumUser user = userRepository
                 .findByVerificationToken(token)
                 .orElseThrow(() -> new ContentDoesNotExistException(token, "verification token"));
@@ -94,5 +97,26 @@ public class AuthenticationService {
         user.setVerificationToken(null);
         user.setEnabled(true);
         return userRepository.save(user);
+    }
+
+    public void sendResetPasswordEmail(String email) {
+        if (userRepository.findByEmail(email).isEmpty())
+            throw new UsernameNotFoundException("User with email '%s' was not found".formatted(email));
+
+        mailService.sendPasswordResetEmail(email);
+    }
+
+    public void resetPassword(String token, String newPassword) {
+        if (!tokenService.validatePasswordResetToken(token, newPassword))
+            throw new JwtException("Could not validate JWT token");
+
+        String username = tokenService.extractSubjectFromToken(token);
+
+        ForumUser user = userRepository
+                .findByUsername(username)
+                .orElseThrow(() -> new UsernameNotFoundException("User with username %s was not found".formatted(username)));
+
+        user.setPassword(passwordEncoder.encode(newPassword));
+        userRepository.save(user);
     }
 }
