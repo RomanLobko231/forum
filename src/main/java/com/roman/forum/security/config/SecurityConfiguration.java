@@ -60,6 +60,8 @@ public class SecurityConfiguration {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(HttpMethod.GET, "/topics/**").permitAll()
                         .requestMatchers(HttpMethod.POST, "/topics/**").permitAll()
+                        .requestMatchers(HttpMethod.PATCH, "/topics/**").hasAnyRole("USER", "ADMIN")
+                        .requestMatchers(HttpMethod.DELETE,"/topics/**").hasRole("ADMIN")
                         .requestMatchers("/auth/**").permitAll()
                         .requestMatchers("/admin/**").hasRole("ADMIN")
                         .requestMatchers("/user/**").hasAnyRole("USER", "ADMIN")

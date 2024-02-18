@@ -3,6 +3,7 @@ package com.roman.forum.controller;
 import com.roman.forum.errors.ContentDoesNotExistException;
 import com.roman.forum.model.DTO.LoginRequestDTO;
 import com.roman.forum.model.DTO.LoginResponseDTO;
+import com.roman.forum.model.DTO.ResetPasswordDTO;
 import com.roman.forum.model.DTO.UserAuthDTO;
 import com.roman.forum.model.ForumUser;
 import com.roman.forum.repository.UserRepository;
@@ -43,4 +44,19 @@ public class AuthController {
         return ResponseEntity.ok(verifiedUser);
 
     }
+
+    @PostMapping(path = "/send-reset-email")
+    public ResponseEntity<?> sendResetPasswordEmail(@RequestParam("email") String email){
+        authenticationService.sendResetPasswordEmail(email);
+        return ResponseEntity.ok().build();
+    }
+
+    @PostMapping(path = "/reset-password")
+    public ResponseEntity<?> resetPassword(@RequestBody ResetPasswordDTO resetPasswordInfo){
+        authenticationService.resetPassword(resetPasswordInfo.getToken(), resetPasswordInfo.getNewPassword());
+        return ResponseEntity.noContent().build();
+    }
+
+
+
 }
