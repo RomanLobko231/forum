@@ -100,15 +100,16 @@ public class AuthenticationService {
     }
 
     public void sendResetPasswordEmail(String email) {
-        if (userRepository.findByEmail(email).isEmpty())
-            throw new UsernameNotFoundException("User with email '%s' was not found".formatted(email));
+        ForumUser user = userRepository
+                .findByEmail(email)
+                .orElseThrow(() ->  new UsernameNotFoundException("User with email '%s' was not found".formatted(email)));
 
-        mailService.sendPasswordResetEmail(email);
+        String resetToken = tokenService.generatePasswordResetToken(user.getUsername());
+        mailService.sendPasswordResetEmail(user, resetToken);
     }
 
     public void resetPassword(String token, String newPassword) {
-        if (!tokenService.validatePasswordResetToken(token, newPassword))
-            throw new JwtException("Could not validate JWT token");
+        if (!tokenService.validatePasswordResetToken(token)) throw new JwtException("Could not validate JWT token");
 
         String username = tokenService.extractSubjectFromToken(token);
 

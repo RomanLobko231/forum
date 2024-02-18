@@ -36,7 +36,7 @@ public class TokenService {
 
     public String generatePasswordResetToken(String username) {
         Instant now = Instant.now();
-        Instant expirationTime = now.plus(10, ChronoUnit.MINUTES);
+        Instant expirationTime = now.plus(15, ChronoUnit.MINUTES);
 
         JwtClaimsSet claims = JwtClaimsSet.builder()
                 .issuer("self")
@@ -69,11 +69,11 @@ public class TokenService {
         return jwtEncoder.encode(JwtEncoderParameters.from(claims)).getTokenValue();
     }
 
-    public boolean validatePasswordResetToken(String token, String username) {
+    public boolean validatePasswordResetToken(String token) {
         try {
             Claims claims = extractClaims(token);
 
-            return claims.getSubject().equals(username) && !claims.getExpiration().before(new Date());
+            return !claims.getExpiration().before(new Date());
         } catch (JwtException e) {
             return false;
         }

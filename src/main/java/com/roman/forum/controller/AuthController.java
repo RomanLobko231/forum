@@ -45,15 +45,15 @@ public class AuthController {
 
     }
 
-    @PostMapping(path = "send-reset-email")
+    @PostMapping(path = "/send-reset-email")
     public ResponseEntity<?> sendResetPasswordEmail(@RequestParam("email") String email){
         authenticationService.sendResetPasswordEmail(email);
         return ResponseEntity.ok().build();
     }
 
     @PostMapping(path = "/reset-password")
-    public ResponseEntity<?> resetPassword(@RequestBody ResetPasswordDTO passwordReset){
-        authenticationService.resetPassword(passwordReset.getToken(), passwordReset.getNewPassword());
+    public ResponseEntity<?> resetPassword(@RequestBody ResetPasswordDTO resetPasswordInfo){
+        authenticationService.resetPassword(resetPasswordInfo.getToken(), resetPasswordInfo.getNewPassword());
         return ResponseEntity.noContent().build();
     }
 

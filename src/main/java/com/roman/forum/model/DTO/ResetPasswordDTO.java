@@ -1,10 +1,14 @@
 package com.roman.forum.model.DTO;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 public class ResetPasswordDTO {
 
-    String newPassword;
+    @JsonProperty(value = "newPassword")
+    private String newPassword;
 
-    String token;
+    @JsonProperty(value = "token")
+    private String token;
 
     public ResetPasswordDTO(String newPassword, String token) {
         this.newPassword = newPassword;

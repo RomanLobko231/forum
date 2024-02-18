@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class LoginRequestDTO {
 
-
     @JsonProperty(value = "username")
     private String username;
 

@@ -18,13 +18,16 @@ public class TokenServiceTest {
     @Autowired
     TokenService tokenService;
 
+
     @Test
-    public void tokenService_whenValidateResetPasswordToken_thenReturnsTrue(){
+    public void whenValidateResetPasswordToken_shouldReturnsTrue(){
 
         String username = "username";
         String token = tokenService.generatePasswordResetToken(username);
-        boolean result = tokenService.validatePasswordResetToken(token, username);
+        String usernameFromToken = tokenService.extractSubjectFromToken(token);
+        boolean result = tokenService.validatePasswordResetToken(token);
 
+        Assertions.assertEquals(username, usernameFromToken);
         Assertions.assertNotNull(token);
         Assertions.assertTrue(result);
     }

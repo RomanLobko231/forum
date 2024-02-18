@@ -1,12 +1,15 @@
 package com.roman.forum.errors;
 
 import com.roman.forum.model.ErrorMessage;
+import jakarta.mail.MessagingException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.http.HttpStatus;
+import org.springframework.mail.MailSendException;
 import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.InternalAuthenticationServiceException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.oauth2.jwt.JwtException;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
@@ -116,5 +119,31 @@ public class ControllerExceptionHandler {
                 request.getDescription(false)
         );
     }
+
+    @ExceptionHandler(MailSendException.class)
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    public ErrorMessage emailFailedHandler(MailSendException ex, WebRequest request){
+        logger.info("Could not send an email", ex);
+        return new ErrorMessage(
+                HttpStatus.INTERNAL_SERVER_ERROR.value(),
+                new Date(),
+                "Something went wrong while sending an email",
+                request.getDescription(false)
+        );
+    }
+
+    @ExceptionHandler(JwtException.class)
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    public ErrorMessage jwtValidationFailHandler(JwtException ex, WebRequest request){
+        logger.info("Could not validate the token", ex);
+        return new ErrorMessage(
+                HttpStatus.UNAUTHORIZED.value(),
+                new Date(),
+                "Could not validate the token",
+                request.getDescription(false)
+        );
+    }
+
+
 
 }
