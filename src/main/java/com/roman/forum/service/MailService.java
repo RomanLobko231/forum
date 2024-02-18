@@ -20,6 +20,9 @@ public class MailService {
     @Value("#{environment.EMAIL_USERNAME}")
     String from;
 
+    @Value("${cors.origins}")
+    String baseUrl;
+
     private final JavaMailSender mailSender;
 
     private final TemplateEngine templateEngine;
@@ -34,6 +37,7 @@ public class MailService {
 
         context.setVariable("name", user.getUsername());
         context.setVariable("token", user.getVerificationToken());
+        context.setVariable("baseUrl", baseUrl);
 
         String content = templateEngine.process("verification-template", context);
         String subject = "Email Verification";
@@ -61,6 +65,7 @@ public class MailService {
             Context context = new Context();
             context.setVariable("token", resetToken);
             context.setVariable("username", user.getUsername());
+            context.setVariable("baseUrl", baseUrl);
 
             String content = templateEngine.process("password-reset-template", context);
             String subject = "Password Reset";
